@@ -105,6 +105,56 @@ async function updateCourse(id, { nom, description, fait }) {
   return data;
 }
 
+// CONGELATEUR
+
+async function passerAuCongelateur(aliment) {
+  const { data, error } = await supabase
+    .from("aliment")
+    .update({ categorie: "Congelé" })
+    .eq("id", aliment.id);
+
+  if (error) {
+    console.error("Error updating aliment:", error);
+    throw error;
+  }
+  window.location.reload();
+  return data;
+}
+
+async function addCongelateur(aliment) {
+  return await supabase.from('congelateur').insert([aliment])
+}
+
+async function getCongelateur() {
+  const { data } = await supabase.from('congelateur').select('*')
+  return data
+}
+
+async function deleteCongelateur(id) {
+  const { data, error } = await supabase
+    .from("congelateur")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error deleting congelateur:", error);
+    throw error;
+  }
+  return data;
+}
+
+async function updateCongelateur(id, aliment) {
+  const { data, error } = await supabase
+    .from("congelateur")
+    .update(aliment)
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating congelateur:", error);
+    throw error;
+  }
+  return data;
+}
 
 export {
   addAliment,
@@ -114,5 +164,10 @@ export {
   getCourses,
   addCourse,
   deleteCourse,
-  updateCourse
+  updateCourse,
+  passerAuCongelateur,
+  addCongelateur,
+  getCongelateur,
+  deleteCongelateur,
+  updateCongelateur
 };

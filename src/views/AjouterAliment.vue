@@ -7,6 +7,18 @@ const nom = ref('')
 const date_peremption = ref('')
 const quantite = ref(1)
 const etat = ref('')
+const etats = ref([
+  'frais',
+  'à consommer rapidement',
+  'périmé',
+  'cuit',
+  'congelé',
+  'cru',
+  'fumé',
+  'mariné',
+  'en conserve',
+  'autre',
+])
 const categorie = ref('')
 const categories = ref([
   'fruits',
@@ -16,7 +28,7 @@ const categories = ref([
   'poissons',
   'pains',
   'boissons',
-  'autres'
+  'autres',
 ])
 
 async function ajouter() {
@@ -26,7 +38,7 @@ async function ajouter() {
       date_peremption: date_peremption.value,
       quantite: quantite.value,
       etat: etat.value,
-      categorie: categorie.value
+      categorie: categorie.value,
     })
     alert('Aliment ajouté !')
     nom.value = ''
@@ -42,7 +54,7 @@ async function ajouter() {
 </script>
 
 <template>
-  <Topbar />
+
   <div class="flex justify-center items-center min-h-screen px-4 bg-gray-100">
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Ajouter un aliment</h1>
@@ -80,12 +92,16 @@ async function ajouter() {
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">État</label>
-          <input
+          <select
             v-model="etat"
-            type="text"
-            placeholder="Frais, périmé, etc."
+            required
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
+            <option disabled value="">-- Choisir un état --</option>
+            <option v-for="etat in etats" :key="etat" :value="etat">
+              {{ etat }}
+            </option>
+          </select>
         </div>
 
         <div>
@@ -96,11 +112,7 @@ async function ajouter() {
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option disabled value="">-- Choisir une catégorie --</option>
-            <option
-              v-for="category in categories"
-              :key="category"
-              :value="category"
-            >
+            <option v-for="category in categories" :key="category" :value="category">
               {{ category }}
             </option>
           </select>

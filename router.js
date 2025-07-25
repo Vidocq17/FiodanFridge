@@ -3,7 +3,7 @@ import AjouterAliment from './src/views/AjouterAliment.vue'
 import ListeAliments from './src/views/ListeAliment.vue'
 import Courses from './src/views/ListeCourses.vue'
 import AjouterCourse from './src/views/AjouterCourse.vue'
-import Congelateur from './src/views/Congelateur.vue'
+import Congelateur from './src/views/ListeCongelateur.vue'
 import AjouterCongelateur from './src/views/AjouterCongelateur.vue'
 
 const routes = [

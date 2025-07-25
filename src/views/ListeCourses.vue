@@ -24,7 +24,6 @@ async function supprimer(id) {
 </script>
 
 <template>
-  <Topbar />
 
   <div class="min-h-screen p-4 bg-gray-100">
     <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Liste des courses</h1>
@@ -48,13 +47,13 @@ async function supprimer(id) {
         <div class="mt-4 flex justify-between gap-2">
           <button
             @click="modifier(course)"
-            class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white text-sm py-1 rounded"
+            class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white text-sm py-2 rounded"
           >
             ✏️ Modifier
           </button>
           <button
             @click="supprimer(course.id)"
-            class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-1 rounded"
+            class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 rounded"
           >
             🗑 Supprimer
           </button>

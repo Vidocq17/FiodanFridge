@@ -1,29 +1,41 @@
-# frigo
+# 🧊 Frigo & Aliments App
 
-This template should help get you started developing with Vue 3 in Vite.
+Une Progressive Web App (PWA) moderne pour **gérer les aliments du frigo et du congélateur**, recevoir des **notifications de péremption** et faciliter l'organisation de tes courses.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🚀 Fonctionnalités
 
-## Customize configuration
+- ✅ Ajout, édition et suppression d’aliments dans le frigo
+- ✅ Transfert facile vers le congélateur
+- ✅ Gestion des courses (à faire / ajout)
+- ✅ Notifications push (date de péremption)
+- ✅ Responsive et optimisée mobile
+- ✅ Déploiement facile sur Netlify
+- ✅ Backend Supabase (PostgreSQL + Edge Functions)
+- ✅ PWA avec icônes et service worker
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
-## Project Setup
+## 🛠️ Tech Stack
 
-```sh
+- **Frontend** : Vue 3 + Vite + TailwindCSS  
+- **Backend** : Supabase (Base de données, Edge Functions)
+- **Notifications** : Web Push (VAPID keys + service worker)
+- **Déploiement** : Netlify
+
+---
+
+## 📦 Installation locale
+
+```bash
+git clone https://github.com/ton-utilisateur/frigo-app.git
+cd frigo-app
 npm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
+Lancer en local: 
 npm run dev
-```
 
-### Compile and Minify for Production
 
-```sh
-npm run build
-```
+👨‍🍳 Développé par
+Avidan – Projet personnel pour mieux gérer le contenu du frigo, limiter le gaspillage, et garder le contrôle 🔄

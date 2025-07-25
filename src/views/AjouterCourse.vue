@@ -18,7 +18,6 @@ async function submitCourse() {
 </script>
 
 <template>
-  <Topbar />
 
   <div class="flex justify-center items-center min-h-screen px-4 bg-gray-100">
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
