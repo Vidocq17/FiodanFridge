@@ -20,18 +20,12 @@ async function registerNotification() {
     applicationServerKey: urlBase64ToUint8Array(publicKey)
   })
 
-  const user = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user : null
-  if (!user) {
-    alert('Utilisateur non connecté')
-    return
-  }
 
   await fetch('https://cfekvupaqtumlystlumc.functions.supabase.co/save-subscription', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       subscription,
-      user_id: user.id
     })
   })
 
