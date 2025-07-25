@@ -1,6 +1,6 @@
 <script setup>
 import { supabase } from '../supabaseClient'
-const publicKey = import.meta.env.VITE_VALID_PUBLIC_KEY
+const publicKey = import.meta.env.VITE_VALID_PUBLIC_KEY || 'BDSixfuNmJ2qy6_9f-on9jfaz2bFqNwI3wc_x3ld2WAMiy2KhLs4lTPc6yjKKXUwp26XjxpDu1zHPfZyzXebZnQ'
 
 async function registerNotification() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
