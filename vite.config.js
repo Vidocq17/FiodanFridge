@@ -38,7 +38,7 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: [ 'icon-192.png', 'icon-512.png',],
       workbox: {
-        navigateFallback: '/',
+        navigateFallback: 'index.html',
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       }
 
