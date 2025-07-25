@@ -2,7 +2,7 @@
   <nav>
     <img src="../assets/logo.png" alt="Logo" class="logo" width="50" height="50" />
     <ul>
-      <li><router-link to="/liste">📦 Mon frigo</router-link></li>
+      <li><router-link to="/">📦 Mon frigo</router-link></li>
       <li style="margin-left: 1rem;"><router-link to="/ajouteraliment">➕ Ajouter aliment</router-link></li>
       <li><router-link to="/courses">🛒 Courses</router-link></li>
       <li style="margin-left: 1rem;"><router-link to="/ajoutercourse">➕ Ajouter course</router-link></li>

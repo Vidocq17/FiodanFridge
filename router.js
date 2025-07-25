@@ -1,13 +1,12 @@
-Friimport { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import AjouterAliment from './src/views/AddAliment.vue'
 import ListeAliments from './src/views/ListAliment.vue'
 import Courses from './src/views/Courses.vue'
 import AjouterCourse from './src/views/AjouterCourse.vue'
 
 const routes = [
-  { path: '/', redirect: '/liste' },
+  { path: '/',  component: ListeAliments },
   { path: '/ajouteraliment', component: AjouterAliment },
-  { path: '/liste', component: ListeAliments },
   { path: '/courses', component: Courses },
   { path: '/ajoutercourse', component: AjouterCourse },
 ]
