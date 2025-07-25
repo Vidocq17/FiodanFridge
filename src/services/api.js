@@ -15,7 +15,7 @@ async function getAliments() {
   const { data, error } = await supabase
     .from("aliment")
     .select("*")
-    .order("date_êremption", { ascending: true });
+    .order("date_peremption", { ascending: true });
 
   if (error) {
     console.error("Error fetching aliments:", error);
@@ -33,6 +33,7 @@ async function deleteAliment(id) {
     console.error("Error deleting aliment:", error);
     throw error;
   }
+  window.location.reload();
   return data;
 }
 async function updateAliment(id, { date_êremption, categorie, quantite, nom }) {
