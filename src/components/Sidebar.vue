@@ -3,7 +3,9 @@ import NotificationRegister from '../views/NotificationRegister.vue';
 </script>
 <template>
   <nav class="bg-gray-100 shadow-md w-full md:w-60 md:h-screen p-4 flex md:flex-col items-center md:items-start gap-4 md:gap-6 md:justify-between md:pb-20">
-    <img src="../assets/logo.png" alt="Logo" class="w-12 h-12" />
+    <div class="flex items-center gap-4 mb-6 md:mb-0 w-full justify-center">
+      <img src="../assets/logo.png" alt="Logo" class="w-12 h-12" />
+    </div>
 
     <ul class="sidebar flex flex-wrap md:flex-col gap-4 md:gap-6">
       <li>
