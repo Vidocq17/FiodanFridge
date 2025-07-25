@@ -1,5 +1,4 @@
 <script setup>
-import { supabase } from '../supabaseClient'
 const publicKey = import.meta.env.VITE_VALID_PUBLIC_KEY
 
 async function registerNotification() {
@@ -20,16 +19,17 @@ async function registerNotification() {
     applicationServerKey: urlBase64ToUint8Array(publicKey)
   })
 
-
-  await fetch('https://cfekvupaqtumlystlumc.functions.supabase.co/save-subscription', {
+  const response = await fetch('https://cfekvupaqtumlystlumc.functions.supabase.co/save-subscription', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      subscription,
-    })
+    body: JSON.stringify({ subscription })
   })
 
-  alert('Notifications activées ✅')
+  if (response.ok) {
+    alert('Notifications activées ✅')
+  } else {
+    alert('Erreur enregistrement notifications ❌')
+  }
 }
 
 // utils
