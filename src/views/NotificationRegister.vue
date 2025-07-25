@@ -1,36 +1,49 @@
 <script setup>
 const publicKey = import.meta.env.VITE_VALID_PUBLIC_KEY
+console.log('Clé publique VAPID:', publicKey)
 
 async function registerNotification() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    alert('Navigateur non compatible avec les notifications')
+    console.warn('Notifications non supportées')
     return
   }
 
+  console.log('Demande de permission...')
   const permission = await Notification.requestPermission()
+  console.log('Permission:', permission)
   if (permission !== 'granted') {
-    alert('Notifications refusées')
+    console.warn('Permission refusée')
     return
   }
 
+  console.log('Permission accordée. Service Worker en cours...')
   const registration = await navigator.serviceWorker.ready
+  console.log('Service Worker prêt')
+
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(publicKey)
   })
 
-  const response = await fetch('https://cfekvupaqtumlystlumc.functions.supabase.co/save-subscription', {
+  console.log('Subscription obtenue:', JSON.stringify(subscription, null, 2))
+
+  const functionUrl = import.meta.env.VITE_SUBSCRIBE_ENDPOINT
+  console.log('Envoi de la subscription à:', functionUrl)
+
+  const response = await fetch(functionUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ subscription })
   })
 
   if (response.ok) {
+    console.log('Subscription envoyée avec succès ✅')
     alert('Notifications activées ✅')
   } else {
-    alert('Erreur enregistrement notifications ❌')
+    console.error('Erreur envoi subscription', await response.text())
   }
 }
+
 
 // utils
 function urlBase64ToUint8Array(base64String) {

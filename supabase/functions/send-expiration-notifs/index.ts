@@ -1,59 +1,91 @@
-// supabase/functions/send-expiration-notifs/index.ts
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js'
-import webpush from 'https://esm.sh/web-push'
+import webpush from 'https://esm.sh/web-push@3.6.7'
 
-// Initialisation Supabase avec accès sécurisé
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 )
 
-// Clés VAPID
+const vapidDetails = {
+  subject: 'mailto:ton@email.com', // remplace par un vrai email
+  publicKey: Deno.env.get('VITE_VALID_PUBLIC_KEY')!,
+  privateKey: Deno.env.get('VITE_VALID_PRIVATE_KEY')!
+}
+
 webpush.setVapidDetails(
-  'mailto:contact@tonsite.fr',
-  Deno.env.get('VITE_VALID_PUBLIC_KEY')!,
-  Deno.env.get('VITE_VALID_PRIVATE_KEY')!
+  vapidDetails.subject,
+  vapidDetails.publicKey,
+  vapidDetails.privateKey
 )
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 serve(async (req) => {
-  // 1. On récupère tous les aliments qui périment dans les 2 prochains jours
-  const { data: aliments, error: errorAliments } = await supabase
-    .from('aliment')
-    .select('nom, date_peremption')
-    .lte('date_peremption', new Date(Date.now() + 2 * 86400000).toISOString()) // dans 2 jours
-
-  if (errorAliments) {
-    console.error('Erreur récupération aliments:', errorAliments)
-    return new Response('Erreur récupération aliments', { status: 500 })
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: CORS_HEADERS })
   }
 
-  // 2. On récupère tous les abonnés (sans auth)
-  const { data: subs, error: errorSubs } = await supabase
-    .from('push_subscriptions')
-    .select('subscription')
+  try {
+    // Récupérer les aliments qui expirent aujourd'hui
+    const today = new Date().toISOString().split('T')[0]
 
-  if (errorSubs) {
-    console.error('Erreur récupération abonnements:', errorSubs)
-    return new Response('Erreur récupération abonnés', { status: 500 })
-  }
+    const { data: aliments, error: errorAliments } = await supabase
+      .from('aliment')
+      .select('*')
+      .eq('date_peremption', today)
 
-  // 3. Préparer le message
-  const msg = {
-    title: '🥶 Attention à ton frigo !',
-    body: aliments.length > 0
-      ? `Tu as ${aliments.length} aliment(s) qui périment bientôt`
-      : `Vérifie tes dates de péremption !`
-  }
-
-  // 4. Envoi à tous les abonnés
-  for (const s of subs) {
-    try {
-      await webpush.sendNotification(s.subscription, JSON.stringify(msg))
-    } catch (e) {
-      console.error('Erreur envoi notif à un abonné:', e)
+    if (errorAliments || !aliments.length) {
+      console.log('Aucun aliment à notifier ou erreur')
+      return new Response('Aucune notification à envoyer', {
+        status: 200,
+        headers: CORS_HEADERS
+      })
     }
-  }
 
-  return new Response(`Notifications envoyées à ${subs.length} abonné(s) ✅`, { status: 200 })
+    // Récupérer toutes les subscriptions
+    const { data: subscriptions, error } = await supabase
+      .from('push_subscriptions')
+      .select('*')
+
+    if (error || !subscriptions.length) {
+      return new Response('Pas de destinataires', {
+        status: 200,
+        headers: CORS_HEADERS
+      })
+    }
+
+    // Construire le message
+    const alimentsList = aliments.map((a) => a.nom).join(', ')
+    const payload = JSON.stringify({
+      title: '🧊 Frigo – Attention !',
+      body: `Les aliments suivants expirent aujourd'hui : ${alimentsList}`
+    })
+
+    // Envoyer à chaque abonné
+    const results = await Promise.allSettled(
+      subscriptions.map((row) =>
+        webpush.sendNotification(row.subscription, payload)
+      )
+    )
+
+    const successCount = results.filter(r => r.status === 'fulfilled').length
+    console.log(`Notifications envoyées avec succès : ${successCount}`)
+
+    return new Response(`Notifications envoyées à ${successCount} utilisateurs ✅`, {
+      status: 200,
+      headers: CORS_HEADERS
+    })
+
+  } catch (e) {
+    console.error('Erreur dans l’envoi des notifications :', e)
+    return new Response('Erreur interne', {
+      status: 500,
+      headers: CORS_HEADERS
+    })
+  }
 })
