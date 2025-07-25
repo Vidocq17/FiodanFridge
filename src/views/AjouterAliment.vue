@@ -64,7 +64,6 @@ async function ajouter() {
           <input
             v-model="date_peremption"
             type="date"
-            required
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -74,7 +73,6 @@ async function ajouter() {
           <input
             v-model.number="quantite"
             type="number"
-            required
             min="1"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -85,7 +83,6 @@ async function ajouter() {
           <input
             v-model="etat"
             type="text"
-            required
             placeholder="Frais, périmé, etc."
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

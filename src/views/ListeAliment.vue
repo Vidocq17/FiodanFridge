@@ -58,9 +58,9 @@ async function supprimer(id) {
         :key="aliment.id"
         class="bg-white rounded-lg shadow p-4 border-l-4"
         :class="{
-          'border-green-500': aliment.etat.toLowerCase().includes('frais'),
-          'border-yellow-400': aliment.etat.toLowerCase().includes('à consommer'),
-          'border-red-500': aliment.etat.toLowerCase().includes('périmé')
+          'border-green-500': aliment.categorie.toLowerCase().includes('frais'),
+          'border-yellow-400': aliment.categorie.toLowerCase().includes('à consommer'),
+          'border-red-500': aliment.categorie.toLowerCase().includes('périmé')
         }"
       >
         <h2 class="text-lg font-semibold text-gray-800">{{ aliment.nom }}</h2>

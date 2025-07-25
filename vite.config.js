@@ -9,6 +9,12 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
+      workbox: {
+        runtimeCaching: [/*...*/],
+      },
       manifest: {
         name: 'Frigo & Aliments',
         short_name: 'F&A',
@@ -29,6 +35,13 @@ export default defineConfig({
           },
         ],
       },
+      injectRegister: 'auto',
+      includeAssets: [ 'icon-192.png', 'icon-512.png',],
+      workbox: {
+        navigateFallback: '/',
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      }
+
     })
   ]
 })
