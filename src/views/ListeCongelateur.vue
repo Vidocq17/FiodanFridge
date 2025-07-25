@@ -35,7 +35,14 @@ async function supprimer(id) {
 <template>
 
   <div class="p-4 bg-gray-100 min-h-screen">
-    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon Réfrigérateur</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon Congélateur</h1>
+
+    <router-link
+      to="/ajoutercongelateur"
+      class="block max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
+    >
+      ➕ Ajouter un aliment
+    </router-link>
 
     <!-- Filtre catégorie -->
     <div class="mb-6 max-w-md mx-auto">

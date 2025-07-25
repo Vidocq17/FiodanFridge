@@ -11,30 +11,30 @@ import NotificationRegister from '../views/NotificationRegister.vue';
     </div>
 
     <!-- Liens de navigation -->
-    <ul class="flex flex-col gap-4 w-full">
+    <ul class="flex flex-row sm:flex-col gap-4 sm:w-full">
       <li>
         <router-link to="/" class="block text-gray-800 hover:text-blue-600 font-medium">📦 Mon frigo</router-link>
       </li>
       <li>
-        <router-link to="/ajouteraliment" class="block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter aliment</router-link>
+        <router-link to="/ajouterfrigo" class="hidden md:block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter aliment</router-link>
       </li>
       <li>
         <router-link to="/courses" class="block text-gray-800 hover:text-blue-600 font-medium">🛒 Courses</router-link>
       </li>
       <li>
-        <router-link to="/ajoutercourse" class="block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter course</router-link>
+        <router-link to="/ajoutercourse" class="hidden md:block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter course</router-link>
       </li>
       <li>
         <router-link to="/congelateur" class="block text-gray-800 hover:text-blue-600 font-medium">❄️ Congélateur</router-link>
       </li>
       <li>
-        <router-link to="/ajoutercongelateur" class="block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter congélateur</router-link>
+        <router-link to="/ajoutercongelateur" class="hidden md:block text-gray-800 hover:text-blue-600 font-medium pl-4">➕ Ajouter congélateur</router-link>
       </li>
     </ul>
 
     <!-- Bouton notification -->
-    <div class="mt-6 w-full">
+    <!-- <div class="mt-6 w-full">
       <NotificationRegister />
-    </div>
+    </div> -->
   </nav>
 </template>

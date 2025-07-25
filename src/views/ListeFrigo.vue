@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import { getAliments, deleteAliment, passerAuCongelateur } from '../services/api'
 import Topbar from '../components/Topbar.vue'
 
@@ -35,6 +36,13 @@ async function supprimer(id) {
 <template>
   <div class="p-4 bg-gray-100 min-h-screen">
     <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon frigo</h1>
+
+    <router-link
+      to="/ajouterfrigo"
+      class="block max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
+    >
+      ➕ Ajouter un aliment
+    </router-link>
 
     <!-- Filtre catégorie -->
     <div class="mb-6 max-w-md mx-auto">
