@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AjouterAliment from './src/views/AddAliment.vue'
-import ListeAliments from './src/views/ListAliment.vue'
-import Courses from './src/views/Courses.vue'
+import AjouterAliment from './src/views/AjouterAliment.vue'
+import ListeAliments from './src/views/ListeAliment.vue'
+import Courses from './src/views/ListeCourses.vue'
 import AjouterCourse from './src/views/AjouterCourse.vue'
 
 const routes = [

@@ -1,25 +1,15 @@
+<script setup>
+import Sidebar from './components/Sidebar.vue'
+import Topbar from './components/Topbar.vue'
+</script>
+
+
 <template>
-  <div class="app-layout">
+  <div class="flex flex-col min-h-screen md:flex-row">
+    <Topbar />
     <Sidebar />
-    <main class="main-content">
+    <main class="flex-1 p-4 bg-gray-100">
       <router-view />
     </main>
   </div>
 </template>
-
-<script setup>
-import Sidebar from './components/Sidebar.vue'
-</script>
-
-<style scoped>
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem;
-  background-color: #f2f4f8;
-}
-</style>

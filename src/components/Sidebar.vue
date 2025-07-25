@@ -1,40 +1,20 @@
 <template>
-  <nav>
-    <img src="../assets/logo.png" alt="Logo" class="logo" width="50" height="50" />
-    <ul>
-      <li><router-link to="/">📦 Mon frigo</router-link></li>
-      <li style="margin-left: 1rem;"><router-link to="/ajouteraliment">➕ Ajouter aliment</router-link></li>
-      <li><router-link to="/courses">🛒 Courses</router-link></li>
-      <li style="margin-left: 1rem;"><router-link to="/ajoutercourse">➕ Ajouter course</router-link></li>
+  <nav class="bg-gray-100 shadow-md w-full md:w-60 md:h-screen p-4 flex md:flex-col items-center md:items-start gap-4 md:gap-6">
+    <img src="../assets/logo.png" alt="Logo" class="w-12 h-12" />
+
+    <ul class="flex flex-wrap md:flex-col gap-4 md:gap-6">
+      <li>
+        <router-link to="/" class="text-gray-800 hover:text-blue-600 font-medium">📦 Mon frigo</router-link>
+      </li>
+      <li>
+        <router-link to="/ajouteraliment" class="text-gray-800 hover:text-blue-600 font-medium ml-4">➕ Ajouter aliment</router-link>
+      </li>
+      <li>
+        <router-link to="/courses" class="text-gray-800 hover:text-blue-600 font-medium">🛒 Courses</router-link>
+      </li>
+      <li>
+        <router-link to="/ajoutercourse" class="text-gray-800 hover:text-blue-600 font-medium ml-4">➕ Ajouter course</router-link>
+      </li>
     </ul>
   </nav>
 </template>
-
-<style scoped>
-nav {
-  background: #f8f9fa;
-  padding: 1rem;
-  min-width: 180px;
-  height: 100vh;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin: 1rem 0;
-}
-
-a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-
-.router-link-active {
-  color: #007bff;
-}
-</style>

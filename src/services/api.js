@@ -66,10 +66,10 @@ async function getCourses() {
   return data;
 }
 
-async function addCourse({ nom, description }) {
+async function addCourse({ nom, description, fait }) {
   const { data, error } = await supabase
     .from("courses")
-    .insert([{ nom, description }]);
+    .insert([{ nom, description, fait }]);
 
   if (error) {
     console.error("Error adding course:", error);
@@ -91,10 +91,10 @@ async function deleteCourse(id) {
   window.location.reload();
   return data;
 }
-async function updateCourse(id, { nom, description }) {
+async function updateCourse(id, { nom, description, fait }) {
   const { data, error } = await supabase
     .from("courses")
-    .update({ nom, description })
+    .update({ nom, description, fait })
     .eq("id", id);
 
   if (error) {
