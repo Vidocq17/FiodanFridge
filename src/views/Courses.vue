@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getCourses, deleteCourse, updateCourse } from '@/services/api';
+import { getCourses, deleteCourse, updateCourse } from '../services/api';
 
 const courses = ref([]);
 

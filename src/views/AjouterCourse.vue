@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { addCourse } from '@/services/api'
+import { addCourse } from '../services/api'
 
 const courseName = ref('')
 const courseDescription = ref('')
