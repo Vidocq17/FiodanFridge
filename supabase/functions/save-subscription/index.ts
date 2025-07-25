@@ -11,15 +11,15 @@ serve(async (req) => {
     return new Response('Method Not Allowed', { status: 405 })
   }
 
-  const { subscription, user_id } = await req.json()
+  const { subscription } = await req.json()
 
-  if (!subscription || !user_id) {
+  if (!subscription) {
     return new Response('Invalid payload', { status: 400 })
   }
 
   const { error } = await supabase
     .from('push_subscriptions')
-    .insert([{ user_id, subscription }])
+    .insert([{ subscription }])
 
   if (error) {
     console.error('Erreur insertion subscription :', error)
