@@ -77,8 +77,8 @@ const filteredCourses = computed(() => {
       ➕ Ajouter une course
     </router-link>
 
-    <!-- Filtres -->
-    <div>
+    <!-- Filtre catégorie -->
+    <div class="mb-6 max-w-md mx-auto">
       <label class="block text-gray-600 text-sm mb-1">Filtrer par catégorie :</label>
       <select
         v-model="selectedCategory"

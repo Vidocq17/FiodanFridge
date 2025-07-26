@@ -4,8 +4,6 @@ import { RouterLink } from 'vue-router'
 import { getAliments, updateAliment, deleteAliment, passerAuCongelateur } from '../services/api'
 import ModalFrigo from '../components/modal/ModalFrigo.vue'
 
-import Topbar from '../components/Topbar.vue'
-
 const aliments = ref([])
 const selectedCategory = ref('')
 const categories = [
