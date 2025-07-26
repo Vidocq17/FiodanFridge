@@ -10,6 +10,7 @@ const showModal = ref(false)
 const alimentEdition = ref(null)
 const selectedCategory = ref('')
 const toast = useToast()
+const searchTerm = ref('')
 const categories = [
   'Boissons',
   'Fruits',
@@ -56,8 +57,11 @@ async function supprimer(id) {
 }
 
 const alimentsFiltres = computed(() => {
-  if (!selectedCategory.value) return aliments.value
-  return aliments.value.filter((a) => a.categorie === selectedCategory.value)
+  return aliments.value.filter((a) => {
+    const matchCategorie = !selectedCategory.value || a.categorie === selectedCategory.value
+    const matchRecherche = !searchTerm.value || a.nom.toLowerCase().includes(searchTerm.value.toLowerCase())
+    return matchCategorie && matchRecherche
+  })
 })
 </script>
 
@@ -73,15 +77,26 @@ const alimentsFiltres = computed(() => {
     </router-link>
 
     <!-- Filtre catégorie -->
-    <div class="mb-6 max-w-md mx-auto">
-      <label class="block text-gray-600 text-sm mb-1">Filtrer par catégorie :</label>
-      <select
-        v-model="selectedCategory"
-        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">Toutes</option>
-        <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
-      </select>
+    <div class="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+      <div class="mb-6 max-w-md ">
+        <label class="block text-gray-600 text-sm mb-1">Filtrer par catégorie :</label>
+        <select
+          v-model="selectedCategory"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Toutes</option>
+          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <div class="mb-6 max-w-md">
+        <label class="block text-gray-600 text-sm mb-1">Rechercher un aliment :</label>
+        <input
+          v-model="searchTerm"
+          type="text"
+          placeholder="Rechercher par nom..."
+          class="w-full max-w-md mb-6 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">

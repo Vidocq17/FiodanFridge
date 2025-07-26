@@ -1,13 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getCourses, deleteCourse, updateCourse } from '../services/api'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification'
 import ModalCourses from '../components/modal/ModalCourses.vue'
 
 const courses = ref([])
 const selectedCategory = ref('')
 
 const toast = useToast()
+
+const searchterm = ref('')
 
 const showModal = ref(false)
 const courseEdition = ref(null)
@@ -71,6 +73,9 @@ const filteredCourses = computed(() => {
   if (selectedCategory.value) {
     result = result.filter((c) => c.categorie === selectedCategory.value)
   }
+  if (searchterm.value) {
+    result = result.filter((c) => c.nom.toLowerCase().includes(searchterm.value.toLowerCase()))
+  }
   result.sort((a, b) => Number(a.fait) - Number(b.fait))
   return result
 })
@@ -87,16 +92,28 @@ const filteredCourses = computed(() => {
       ➕ Ajouter une course
     </router-link>
 
-    <!-- Filtre catégorie -->
-    <div class="mb-6 max-w-md mx-auto">
-      <label class="block text-gray-600 text-sm mb-1">Filtrer par catégorie :</label>
-      <select
-        v-model="selectedCategory"
-        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">Toutes</option>
-        <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
-      </select>
+    <!-- Filtres -->
+    <div class="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+      <div class="max-w-md">
+        <label class="block text-gray-600 text-sm mb-1">Filtrer par catégorie :</label>
+        <select
+          v-model="selectedCategory"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Toutes</option>
+          <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="mb-6 max-w-md">
+        <label class="block text-gray-600 text-sm mb-1">Rechercher une course :</label>
+        <input
+          v-model="searchterm"
+          type="text"
+          placeholder="Rechercher par nom..."
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
     </div>
 
     <!-- Liste -->

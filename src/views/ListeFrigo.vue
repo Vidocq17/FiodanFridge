@@ -2,12 +2,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { getAliments, updateAliment, deleteAliment, passerAuCongelateur } from '../services/api'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification'
 
 import ModalFrigo from '../components/modal/ModalFrigo.vue'
 
-// TODO : notifications
-// TODO : export calendrier pour chaque evenement ? 
+// FAIT - TODO : notifications
+// TODO : export calendrier pour chaque evenement ?
 // FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
 // TODO : QR code scanner
 // TODO : liste dans le nom pour aller plus vite
@@ -20,6 +20,7 @@ const showModal = ref(false)
 const alimentEdition = ref(null)
 const todayDate = new Date().toISOString().split('T')[0]
 const toast = useToast()
+const searchTerm = ref('')
 
 const categories = [
   'Boissons',
@@ -60,7 +61,9 @@ const alimentsFiltres = computed(() => {
   return aliments.value.filter((a) => {
     const matchCategorie = !selectedCategory.value || a.categorie === selectedCategory.value
     const matchEtat = !selectedEtat.value || a.etat === selectedEtat.value
-    return matchCategorie && matchEtat
+    const matchRecherche =
+      !searchTerm.value || a.nom.toLowerCase().includes(searchTerm.value.toLowerCase())
+    return matchCategorie && matchEtat && matchRecherche
   })
 })
 
@@ -81,7 +84,7 @@ async function enregistrerModifications() {
     categorie: alimentEdition.value.categorie,
     quantite: alimentEdition.value.quantite,
     date_peremption: alimentEdition.value.date_peremption,
-    etat: alimentEdition.value.etat
+    etat: alimentEdition.value.etat,
   })
   showModal.value = false
   toast.success('Modifications enregistrées avec succès !')
@@ -124,6 +127,17 @@ function getEtatAffichage(aliment) {
     >
       ➕ Ajouter un aliment
     </router-link>
+
+    <!-- searchBar -->
+    <div class="max-w-md mx-auto">
+      <label class="block text-gray-600 text-sm mb-1">Rechercher un aliment :</label>
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Carotte, yaourt..."
+        class="w-full max-w-md mx-auto mb-6 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
 
     <!-- Filtres -->
     <div class="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-6">
@@ -171,7 +185,9 @@ function getEtatAffichage(aliment) {
         <p class="text-sm text-gray-600">
           Péremption : {{ new Date(aliment.date_peremption).toLocaleDateString() }}
         </p>
-        <p class="text-sm text-gray-600">Ajouté le : {{ new Date(todayDate).toLocaleDateString() }}</p>
+        <p class="text-sm text-gray-600">
+          Ajouté le : {{ new Date(todayDate).toLocaleDateString() }}
+        </p>
         <p class="text-sm mt-2" :class="getEtatAffichage(aliment).color">
           {{ getEtatAffichage(aliment).message }}
         </p>
