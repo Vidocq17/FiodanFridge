@@ -20,16 +20,17 @@ const etats = ref([
   'autre',
 ])
 const categorie = ref('')
-const categories = ref([
-  'fruits',
-  'légumes',
-  'produits laitiers',
-  'viandes',
-  'poissons',
-  'pains',
-  'boissons',
-  'autres',
-])
+const categories = [
+  'Boissons',
+  'Fruits',
+  'Hygiène',
+  'Légumes',
+  'Poissons',
+  'Produits laitiers',
+  'Viandes',
+  'Viennoiserie',
+  'Autres',
+]
 
 async function ajouter() {
   try {
@@ -54,7 +55,6 @@ async function ajouter() {
 </script>
 
 <template>
-
   <div class="flex justify-center items-center min-h-screen px-4 bg-gray-100">
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Ajouter un aliment</h1>

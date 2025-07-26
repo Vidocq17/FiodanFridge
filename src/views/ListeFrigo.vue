@@ -1,21 +1,26 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { getAliments, deleteAliment, passerAuCongelateur } from '../services/api'
+import { getAliments, updateAliment, deleteAliment, passerAuCongelateur } from '../services/api'
+import ModalFrigo from '../components/modal/ModalFrigo.vue'
+
 import Topbar from '../components/Topbar.vue'
 
 const aliments = ref([])
 const selectedCategory = ref('')
 const categories = [
-  'fruits',
-  'légumes',
-  'produits laitiers',
-  'viandes',
-  'poissons',
-  'pains',
-  'boissons',
-  'autres',
+  'Boissons',
+  'Fruits',
+  'Hygiène',
+  'Légumes',
+  'Poissons',
+  'Produits laitiers',
+  'Viandes',
+  'Viennoiserie',
+  'Autres',
 ]
+const showModal = ref(false)
+const alimentEdition = ref(null)
 
 async function fetchAliments() {
   aliments.value = await getAliments()
@@ -29,6 +34,26 @@ const alimentsFiltres = computed(() => {
 
 async function supprimer(id) {
   await deleteAliment(id)
+  fetchAliments()
+}
+async function modifier(id) {
+  await updateAliment(id)
+  fetchAliments()
+}
+
+function ouvrirModal(aliment) {
+  alimentEdition.value = { ...aliment } // Crée une copie pour l'édition
+  showModal.value = true
+}
+
+async function enregistrerModifications() {
+  await updateAliment(alimentEdition.value.id, {
+    nom: alimentEdition.value.nom,
+    categorie: alimentEdition.value.categorie,
+    quantite: alimentEdition.value.quantite,
+    date_peremption: alimentEdition.value.date_peremption,
+  })
+  showModal.value = false
   fetchAliments()
 }
 </script>
@@ -69,13 +94,21 @@ async function supprimer(id) {
         }"
       >
         <h2 class="text-lg font-semibold text-gray-800">{{ aliment.nom }}</h2>
-        <p class="text-sm text-gray-500">{{ aliment.categorie }}</p>
+        <!-- mettre une majuscule sur la catégorie -->
+        <p class="text-sm text-gray-500">
+          {{ aliment.categorie.charAt(0).toUpperCase() + aliment.categorie.slice(1) }}
+        </p>
         <p class="text-sm text-gray-600 mt-1">Quantité : {{ aliment.quantite }}</p>
-        <p class="text-sm text-gray-600">Péremption : {{ aliment.date_peremption }}</p>
+        <p class="text-sm text-gray-600">
+          Péremption : {{ new Date(aliment.date_peremption).toLocaleDateString() }}
+        </p>
 
         <div class="mt-4 flex justify-between gap-2">
           <!-- Modifier : à implémenter plus tard -->
-          <button class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white text-sm py-2 rounded">
+          <button
+            @click="ouvrirModal(aliment)"
+            class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white text-sm py-2 rounded"
+          >
             ✏️ Modifier
           </button>
           <button
@@ -91,6 +124,14 @@ async function supprimer(id) {
             🧊 Congeler
           </button>
         </div>
+        <ModalFrigo
+          v-if="showModal"
+          :show="showModal"
+          :aliment="alimentEdition"
+          :categories="categories"
+          @close="showModal = false"
+          @save="enregistrerModifications"
+        />
       </div>
     </div>
   </div>

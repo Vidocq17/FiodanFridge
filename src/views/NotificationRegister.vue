@@ -22,7 +22,7 @@ async function registerNotification() {
 
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(publicKey)
+    applicationServerKey: urlBase64ToUint8Array(publicKey),
   })
 
   console.log('Subscription obtenue:', JSON.stringify(subscription, null, 2))
@@ -33,7 +33,7 @@ async function registerNotification() {
   const response = await fetch(functionUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ subscription })
+    body: JSON.stringify({ subscription }),
   })
 
   if (response.ok) {
@@ -43,7 +43,6 @@ async function registerNotification() {
     console.error('Erreur envoi subscription', await response.text())
   }
 }
-
 
 // utils
 function urlBase64ToUint8Array(base64String) {
@@ -55,8 +54,10 @@ function urlBase64ToUint8Array(base64String) {
 </script>
 
 <template>
-  <button @click="registerNotification"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow">
+  <button
+    @click="registerNotification"
+    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow"
+  >
     🔔 Activer les notifications
   </button>
 </template>

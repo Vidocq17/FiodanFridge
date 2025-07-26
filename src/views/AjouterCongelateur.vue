@@ -3,24 +3,23 @@ import { ref } from 'vue'
 import { addCongelateur } from '../services/api'
 
 const nom = ref('')
-const date_congelation = ref('')
+const todayDate = new Date().toISOString().split('T')[0]
+const date_congelation = ref(todayDate) // Default to today
 const quantite = ref(1)
 const etat = ref('')
-const etats = ref([
-    'congelé, LOL',
-    'autre, bah non du coup'
-])
-const categorie = ref("")
-const categories = ref([
-  'fruits',
-  'légumes',
-  'produits laitiers',
-  'viandes',
-  'poissons',
-  'pains',
-  'boissons',
-  'autres'
-])
+const etats = ref(['congelé, LOL', 'autre, bah non du coup'])
+const categorie = ref('')
+const categories = [
+  'Boissons',
+  'Fruits',
+  'Hygiène',
+  'Légumes',
+  'Poissons',
+  'Produits laitiers',
+  'Viandes',
+  'Viennoiserie',
+  'Autres',
+]
 
 const ajouter = async () => {
   await addCongelateur({
@@ -28,7 +27,7 @@ const ajouter = async () => {
     date_congelation: date_congelation.value || null,
     quantite: quantite.value,
     etat: etat.value,
-    categorie: categorie.value
+    categorie: categorie.value,
   })
   alert('Ajouté au congélateur !')
 }
@@ -89,16 +88,12 @@ const ajouter = async () => {
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option disabled value="">-- Choisir une catégorie --</option>
-            <option
-              v-for="category in categories"
-              :key="category"
-              :value="category"
-            >
+            <option v-for="category in categories" :key="category" :value="category">
               {{ category }}
             </option>
           </select>
         </div>
-    
+
         <button
           type="submit"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200"
