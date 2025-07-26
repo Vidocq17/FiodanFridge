@@ -1,4 +1,7 @@
 import { supabase } from '../supabaseClient.js'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 // ALIMENTS
 
@@ -49,11 +52,7 @@ async function updateAliment(id, { date_peremption, categorie, quantite, nom }) 
   return data
 }
 async function getAliment() {
-  const { data, error } = await supabase
-    .from('aliment')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const { data, error } = await supabase.from('aliment').select('*').eq('id', id).single()
 
   if (error) {
     console.error('Error fetching aliment:', error)
@@ -75,7 +74,9 @@ async function getCourses() {
 }
 
 async function addCourse({ nom, description, fait, categorie }) {
-  const { data, error } = await supabase.from('courses').insert([{ nom, description, fait, categorie }])
+  const { data, error } = await supabase
+    .from('courses')
+    .insert([{ nom, description, fait, categorie }])
 
   if (error) {
     console.error('Error adding course:', error)
@@ -109,17 +110,29 @@ async function updateCourse(id, { nom, description, fait, categorie }) {
 // CONGELATEUR
 
 async function passerAuCongelateur(aliment) {
-  const { data, error } = await supabase
-    .from('aliment')
-    .update({ categorie: 'Congelé' })
-    .eq('id', aliment.id)
+  try {
+    const { data, error: insertError } = await supabase.from('congelateur').insert([
+      {
+        nom: aliment.nom,
+        quantite: aliment.quantite,
+        date_congelation: new Date().toISOString().split('T')[0],
+        categorie: aliment.categorie,
+        etat: 'Congelé',
+      },
+    ])
 
-  if (error) {
-    console.error('Error updating aliment:', error)
-    throw error
+    if (insertError) throw insertError
+
+    const { error: deleteError } = await supabase.from('aliment').delete().eq('id', aliment.id)
+
+    if (deleteError) throw deleteError
+
+    toast.success(`🧊 "${aliment.nom}" est passé au congélateur !`)
+    fetchAliments()
+  } catch (err) {
+    console.error('Erreur transfert au congélateur :', err)
+    toast.error('Erreur lors du transfert au congélateur')
   }
-  window.location.reload()
-  return data
 }
 
 async function addCongelateur(aliment) {
@@ -152,9 +165,17 @@ async function updateCongelateur(id, aliment) {
 }
 
 export {
-  addAliment, getAliments, deleteAliment, updateAliment,
-
-  getCourses, addCourse, deleteCourse, updateCourse,
-
-  passerAuCongelateur, addCongelateur, getCongelateur, deleteCongelateur, updateCongelateur
-};
+  addAliment,
+  getAliments,
+  deleteAliment,
+  updateAliment,
+  getCourses,
+  addCourse,
+  deleteCourse,
+  updateCourse,
+  passerAuCongelateur,
+  addCongelateur,
+  getCongelateur,
+  deleteCongelateur,
+  updateCongelateur,
+}

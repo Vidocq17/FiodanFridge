@@ -11,7 +11,7 @@ import ModalFrigo from '../components/modal/ModalFrigo.vue'
 // FAIT - TODO : export calendrier pour chaque evenement ?
 // FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
 // TODO : QR code scanner
-// TODO : liste dans le nom pour aller plus vite
+// FAIT - TODO : liste dans le nom pour aller plus vite
 // TODO : ajouter un bouton pour passer un aliment depuis le frigo au congélateur
 
 const aliments = ref([])
@@ -105,6 +105,7 @@ function getEtatAffichage(aliment) {
       color: 'text-red-600 font-bold',
     }
   } else if (joursRestants <= 7) {
+    aliment.etat = 'À consommer rapidement'
     return {
       message: `⏳ À consommer dans ${Math.ceil(joursRestants)} jour(s)`,
       color: 'text-yellow-600 font-semibold',
