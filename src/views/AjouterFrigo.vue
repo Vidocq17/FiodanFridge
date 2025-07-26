@@ -8,16 +8,16 @@ const date_peremption = ref('')
 const quantite = ref(1)
 const etat = ref('')
 const etats = ref([
-  'frais',
-  'à consommer rapidement',
-  'périmé',
-  'cuit',
-  'congelé',
-  'cru',
-  'fumé',
-  'mariné',
-  'en conserve',
-  'autre',
+  'À consommer rapidement',
+  'Congelé',
+  'Cru',
+  'Cuit',
+  'En conserve',
+  'Frais',
+  'Fumé',
+  'Mariné',
+  'Périmé',
+  'Autre',
 ])
 const categorie = ref('')
 const categories = [

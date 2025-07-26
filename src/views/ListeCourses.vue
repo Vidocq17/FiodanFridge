@@ -72,7 +72,7 @@ const filteredCourses = computed(() => {
 
     <router-link
       to="/ajoutercourse"
-      class="block max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
+      class="block md:hidden max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
     >
       ➕ Ajouter une course
     </router-link>
