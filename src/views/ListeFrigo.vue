@@ -10,9 +10,8 @@ import ModalFrigo from '../components/modal/ModalFrigo.vue'
 // FAIT - TODO: ajouter liste de recherche dans les listes
 // FAIT - TODO : export calendrier pour chaque evenement ?
 // FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
-// TODO : QR code scanner
 // FAIT - TODO : liste dans le nom pour aller plus vite
-// TODO : ajouter un bouton pour passer un aliment depuis le frigo au congélateur
+// FAIT - TODO : ajouter un bouton pour passer un aliment depuis le frigo au congélateur
 
 const aliments = ref([])
 const selectedCategory = ref('')
