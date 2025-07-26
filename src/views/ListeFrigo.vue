@@ -7,6 +7,7 @@ import { useToast } from 'vue-toastification'
 import ModalFrigo from '../components/modal/ModalFrigo.vue'
 
 // FAIT - TODO : notifications
+// FAIT - TODO: ajouter liste de recherche dans les listes
 // TODO : export calendrier pour chaque evenement ?
 // FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
 // TODO : QR code scanner
@@ -115,11 +116,51 @@ function getEtatAffichage(aliment) {
     }
   }
 }
+
+function exporterVersCalendrier() {
+  const lignes = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MonAppFrigo//Calendrier//FR']
+
+  alimentsFiltres.value.forEach((aliment) => {
+    const dt = new Date(aliment.date_peremption)
+    const date = dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+
+    lignes.push(
+      'BEGIN:VEVENT',
+      `UID:${aliment.id}@monapp.frigo`,
+      `DTSTAMP:${date}`,
+      `DTSTART:${date}`,
+      `SUMMARY:⚠️ ${aliment.nom} arrive à péremption`,
+      `DESCRIPTION:À consommer avant le ${dt.toLocaleDateString()} (quantité : ${aliment.quantite})`,
+      'END:VEVENT',
+    )
+  })
+
+  lignes.push('END:VCALENDAR')
+
+  const blob = new Blob([lignes.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'frigo-péremptions.ics'
+  a.click()
+
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
   <div class="p-4 bg-gray-100 min-h-screen">
-    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon frigo</h1>
+    <div class="flex">
+      <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon frigo</h1>
+      <!-- export vers le calendrier -->
+      <button
+        @click="exporterVersCalendrier"
+        class="mb-6 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded shadow"
+      >
+        📅 Exporter vers le calendrier
+      </button>
+    </div>
 
     <router-link
       to="/ajouterfrigo"
