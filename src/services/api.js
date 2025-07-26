@@ -48,6 +48,19 @@ async function updateAliment(id, { date_peremption, categorie, quantite, nom }) 
   window.location.reload()
   return data
 }
+async function getAliment() {
+  const { data, error } = await supabase
+    .from('aliment')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching aliment:', error)
+    throw error
+  }
+  return data
+}
 
 // COURSES
 

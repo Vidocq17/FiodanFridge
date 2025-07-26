@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { addCongelateur } from '../services/api'
-import { useToast } from 'vue-toastification'
+import { ref, computed, onMounted } from 'vue'
+import { addCongelateur, getCongelateur } from '../services/api'
+import { useToast } from 'vue-toastification'
 
 const nom = ref('')
 const todayDate = new Date().toISOString().split('T')[0]
 const date_congelation = ref(todayDate)
 const quantite = ref(1)
-const toast = useToast()
 const etat = ref('Congelé')
 const categorie = ref('')
+const existingNames = ref([])
+
+const toast = useToast()
+
 const categories = [
   'Boissons',
   'Fruits',
@@ -45,6 +48,22 @@ const ajouter = async () => {
   toast.success('Aliment ajouté au congélateur avec succès !')
   resetValues()
 }
+
+// Suggestions
+onMounted(async () => {
+  try {
+    const aliments = await getCongelateur()
+    existingNames.value = [...new Set(aliments.map((a) => a.nom?.toLowerCase()).filter(Boolean))]
+  } catch (error) {
+    console.error('Erreur lors du chargement des aliments :', error)
+  }
+})
+
+const suggestions = computed(() => {
+  if (!nom.value) return []
+  const input = nom.value.toLowerCase()
+  return existingNames.value.filter((n) => n.startsWith(input)).slice(0, 5)
+})
 </script>
 
 <template>
@@ -52,7 +71,8 @@ const ajouter = async () => {
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Ajouter au congélateur</h1>
       <form @submit.prevent="ajouter" class="space-y-4">
-        <div>
+        <!-- Champ nom + suggestions -->
+        <div class="relative">
           <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
           <input
             v-model="nom"
@@ -61,7 +81,22 @@ const ajouter = async () => {
             placeholder="Nom de l'aliment"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <ul
+            v-if="suggestions.length"
+            class="absolute z-10 bg-white border rounded-md w-full mt-1 shadow"
+          >
+            <li
+              v-for="(sugg, index) in suggestions"
+              :key="index"
+              @click="nom = sugg"
+              class="px-3 py-1 hover:bg-blue-100 cursor-pointer"
+            >
+              {{ sugg }}
+            </li>
+          </ul>
         </div>
+
+        <!-- Date -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Date de congélation</label>
           <input
@@ -70,6 +105,8 @@ const ajouter = async () => {
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        <!-- Quantité -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
           <input
@@ -80,18 +117,18 @@ const ajouter = async () => {
           />
         </div>
 
+        <!-- État (readonly) -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">État</label>
           <input
             v-model="etat"
             type="text"
-            required
             readonly
-            placeholder="État de l'aliment"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700 cursor-not-allowed"
+          />
         </div>
 
+        <!-- Catégorie -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
           <select
@@ -106,6 +143,7 @@ const ajouter = async () => {
           </select>
         </div>
 
+        <!-- Bouton -->
         <button
           type="submit"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200"

@@ -1,14 +1,17 @@
 <script setup>
-import { ref } from 'vue'
-import { addAliment } from '../services/api'
-import { useToast } from 'vue-toastification'
+import { computed, onMounted, ref } from 'vue'
+import { addAliment, getAliments } from '../services/api'
+import { useToast } from 'vue-toastification'
 
-const nom = ref('')
+const nom = ref('') // ✅ un seul champ cohérent
 const date_peremption = ref('')
 const quantite = ref(1)
-const toast = useToast()
 const etat = ref('Frais')
-const etats = ref([
+const categorie = ref('')
+const existingNames = ref([])
+const toast = useToast()
+
+const etats = [
   'À consommer rapidement',
   'Congelé',
   'Cru',
@@ -20,8 +23,8 @@ const etats = ref([
   'Mariné',
   'Périmé',
   'Autre',
-])
-const categorie = ref('')
+]
+
 const categories = [
   'Boissons',
   'Fruits',
@@ -62,6 +65,21 @@ async function ajouter() {
     toast.error("Erreur lors de l'ajout.")
   }
 }
+
+onMounted(async () => {
+  try {
+    const aliments = await getAliments()
+    existingNames.value = [...new Set(aliments.map((a) => a.nom?.toLowerCase()).filter(Boolean))]
+  } catch (error) {
+    console.error('Erreur lors du chargement des noms existants :', error)
+  }
+})
+
+const suggestions = computed(() => {
+  if (!nom.value) return []
+  const lowerInput = nom.value.toLowerCase()
+  return existingNames.value.filter((n) => n.startsWith(lowerInput)).slice(0, 5)
+})
 </script>
 
 <template>
@@ -70,17 +88,31 @@ async function ajouter() {
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Ajouter un aliment</h1>
 
       <form @submit.prevent="ajouter" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+        <!-- Champ Nom + Suggestions -->
+        <div class="relative">
           <input
             v-model="nom"
             type="text"
+            placeholder="Nom de l’aliment"
             required
-            placeholder="Nom de l'aliment"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <ul
+            v-if="suggestions.length"
+            class="absolute z-10 bg-white border rounded-md w-full mt-1 shadow"
+          >
+            <li
+              v-for="(sugg, i) in suggestions"
+              :key="i"
+              @click="nom = sugg"
+              class="px-3 py-1 hover:bg-blue-100 cursor-pointer"
+            >
+              {{ sugg }}
+            </li>
+          </ul>
         </div>
 
+        <!-- Date -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Date de péremption</label>
           <input
@@ -90,6 +122,7 @@ async function ajouter() {
           />
         </div>
 
+        <!-- Quantité -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
           <input
@@ -100,6 +133,7 @@ async function ajouter() {
           />
         </div>
 
+        <!-- État -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">État</label>
           <select
@@ -108,12 +142,13 @@ async function ajouter() {
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option disabled value="">-- Choisir un état --</option>
-            <option v-for="etat in etats" :key="etat" :value="etat">
-              {{ etat }}
+            <option v-for="etatOption in etats" :key="etatOption" :value="etatOption">
+              {{ etatOption }}
             </option>
           </select>
         </div>
 
+        <!-- Catégorie -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
           <select

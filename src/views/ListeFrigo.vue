@@ -8,7 +8,7 @@ import ModalFrigo from '../components/modal/ModalFrigo.vue'
 
 // FAIT - TODO : notifications
 // FAIT - TODO: ajouter liste de recherche dans les listes
-// TODO : export calendrier pour chaque evenement ?
+// FAIT - TODO : export calendrier pour chaque evenement ?
 // FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
 // TODO : QR code scanner
 // TODO : liste dans le nom pour aller plus vite
@@ -151,23 +151,24 @@ function exporterVersCalendrier() {
 
 <template>
   <div class="p-4 bg-gray-100 min-h-screen">
-    <div class="flex">
-      <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon frigo</h1>
-      <!-- export vers le calendrier -->
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Mon frigo</h1>
+
+    <!-- export vers le calendrier -->
+    <div class="flex flex-col gap-3 md:hidden text-center mb-3">
       <button
         @click="exporterVersCalendrier"
-        class="mb-6 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded shadow"
+        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow w-fit mx-auto"
       >
         📅 Exporter vers le calendrier
       </button>
-    </div>
 
-    <router-link
-      to="/ajouterfrigo"
-      class="block md:hidden max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
-    >
-      ➕ Ajouter un aliment
-    </router-link>
+      <router-link
+        to="/ajouterfrigo"
+        class="max-w-fit mx-auto mb-6 text-sm bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow"
+      >
+        ➕ Ajouter un aliment
+      </router-link>
+    </div>
 
     <!-- searchBar -->
     <div class="max-w-md mx-auto">
