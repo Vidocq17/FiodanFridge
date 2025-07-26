@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { addCourse } from '../services/api'
-import Topbar from '../components/Topbar.vue'
+import { useToast } from 'vue-toastification'
 
 const courseName = ref('')
 const courseDescription = ref('')
+const toast = useToast()
 const courseCategories = ref([
   'Fruits',
   'Légumes',
@@ -17,15 +18,20 @@ const courseCategories = ref([
 ])
 const selectedCategory = ref('')
 
+function resetValues() {
+  courseName.value = ''
+  courseDescription.value = ''
+  selectedCategory.value = ''
+}
+
 async function submitCourse() {
   await addCourse({
     nom: courseName.value,
     description: courseDescription.value,
     categorie: selectedCategory.value,
   })
-  alert('Course ajoutée !') // TODO: mettre un système de notification plus élaboré que l'alert
-  courseName.value = ''
-  courseDescription.value = ''
+  toast.success('Course ajoutée !')
+  resetValues()
 }
 </script>
 

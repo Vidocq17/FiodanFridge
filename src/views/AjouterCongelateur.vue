@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import { addCongelateur } from '../services/api'
+import { useToast } from 'vue-toastification'
 
 const nom = ref('')
 const todayDate = new Date().toISOString().split('T')[0]
-const date_congelation = ref(todayDate) // Default to today
+const date_congelation = ref(todayDate)
 const quantite = ref(1)
-const etat = ref('')
-const etats = ref(['congelé, LOL', 'autre, bah non du coup'])
+const toast = useToast()
+const etat = ref('Congelé')
 const categorie = ref('')
 const categories = [
   'Boissons',
@@ -25,6 +26,14 @@ const categories = [
   'Autres',
 ]
 
+function resetValues() {
+  nom.value = ''
+  date_congelation.value = todayDate
+  quantite.value = 1
+  etat.value = 'Congelé'
+  categorie.value = ''
+}
+
 const ajouter = async () => {
   await addCongelateur({
     nom: nom.value,
@@ -33,7 +42,8 @@ const ajouter = async () => {
     etat: etat.value,
     categorie: categorie.value,
   })
-  alert('Ajouté au congélateur !')
+  toast.success('Aliment ajouté au congélateur avec succès !')
+  resetValues()
 }
 </script>
 
@@ -72,16 +82,14 @@ const ajouter = async () => {
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">État</label>
-          <select
+          <input
             v-model="etat"
+            type="text"
             required
+            readonly
+            placeholder="État de l'aliment"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option disabled value="">-- Choisir un état --</option>
-            <option v-for="etat in etats" :key="etat" :value="etat">
-              {{ etat }}
-            </option>
-          </select>
+            />
         </div>
 
         <div>

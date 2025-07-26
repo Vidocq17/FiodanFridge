@@ -3,6 +3,7 @@ defineProps({
   show: Boolean,
   aliment: Object,
   categories: Array,
+  etats: Array,
 })
 const emit = defineEmits(['close', 'save'])
 </script>
@@ -35,6 +36,11 @@ const emit = defineEmits(['close', 'save'])
       <label class="block mb-2 text-sm text-gray-700">Catégorie</label>
       <select v-model="aliment.categorie" class="w-full border px-3 py-2 rounded mb-4">
         <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+      </select>
+
+      <label class="block mb-2 text-sm text-gray-700">État</label>
+      <select v-model="aliment.etat" class="w-full border px-3 py-2 rounded mb-4">
+        <option v-for="etat in etats" :key="etat" :value="etat">{{ etat }}</option>
       </select>
 
       <div class="flex justify-end gap-2">

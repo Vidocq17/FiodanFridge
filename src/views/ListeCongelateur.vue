@@ -1,12 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { getCongelateur, updateCongelateur, deleteCongelateur } from '../services/api'
+import { useToast } from 'vue-toastification'
+
 import ModalCon from '../components/modal/ModalCongelateur.vue'
 
 const aliments = ref([])
 const showModal = ref(false)
 const alimentEdition = ref(null)
 const selectedCategory = ref('')
+const toast = useToast()
 const categories = [
   'Boissons',
   'Fruits',
@@ -42,11 +45,13 @@ async function enregistrerModifications() {
     categorie: alimentEdition.value.categorie,
   })
   showModal.value = false
+  toast.success('Modifications enregistrées avec succès !')
   fetchAliments()
 }
 
 async function supprimer(id) {
   await deleteCongelateur(id)
+  toast.success('Aliment supprimé avec succès !')
   fetchAliments()
 }
 

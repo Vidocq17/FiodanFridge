@@ -2,9 +2,16 @@
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { getAliments, updateAliment, deleteAliment, passerAuCongelateur } from '../services/api'
+import { useToast } from 'vue-toastification'
+
 import ModalFrigo from '../components/modal/ModalFrigo.vue'
 
+// TODO : notifications
 // TODO : export calendrier pour chaque evenement ? 
+// FAIT - TODO : ajouter une fonction pour changer automatiquement l'état d'un aliment en fonction de sa date de péremption
+// TODO : QR code scanner
+// TODO : liste dans le nom pour aller plus vite
+// TODO : ajouter un bouton pour passer un aliment depuis le frigo au congélateur
 
 const aliments = ref([])
 const selectedCategory = ref('')
@@ -12,6 +19,7 @@ const selectedEtat = ref('')
 const showModal = ref(false)
 const alimentEdition = ref(null)
 const todayDate = new Date().toISOString().split('T')[0]
+const toast = useToast()
 
 const categories = [
   'Boissons',
@@ -58,6 +66,7 @@ const alimentsFiltres = computed(() => {
 
 async function supprimer(id) {
   await deleteAliment(id)
+  toast.success('Aliment supprimé avec succès !')
   fetchAliments()
 }
 
@@ -75,6 +84,7 @@ async function enregistrerModifications() {
     etat: alimentEdition.value.etat
   })
   showModal.value = false
+  toast.success('Modifications enregistrées avec succès !')
   fetchAliments()
 }
 
@@ -85,11 +95,12 @@ function getEtatAffichage(aliment) {
   const joursRestants = diff / (1000 * 3600 * 24)
 
   if (joursRestants < 0) {
+    aliment.etat = 'Périmé'
     return {
       message: '☠️ ATTENTION : cet aliment est périmé !',
       color: 'text-red-600 font-bold',
     }
-  } else if (joursRestants <= 3) {
+  } else if (joursRestants <= 7) {
     return {
       message: `⏳ À consommer dans ${Math.ceil(joursRestants)} jour(s)`,
       color: 'text-yellow-600 font-semibold',
@@ -146,9 +157,9 @@ function getEtatAffichage(aliment) {
         :key="aliment.id"
         class="bg-white rounded-lg shadow p-4 border-l-4"
         :class="{
-          'border-green-500': aliment.etat?.toLowerCase().includes('frais'),
-          'border-yellow-400': aliment.etat?.toLowerCase().includes('à consommer'),
-          'border-red-500': aliment.etat?.toLowerCase().includes('périmé'),
+          'border-green-500': aliment.etat === 'Frais',
+          'border-yellow-400': aliment.etat === 'À consommer rapidement',
+          'border-red-500': aliment.etat === 'Périmé',
         }"
       >
         <h2 class="text-lg font-semibold text-gray-800">{{ aliment.nom }}</h2>

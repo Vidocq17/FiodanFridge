@@ -1,12 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { addAliment } from '../services/api'
-import Topbar from '../components/Topbar.vue'
+import { useToast } from 'vue-toastification'
 
 const nom = ref('')
 const date_peremption = ref('')
 const quantite = ref(1)
-const etat = ref('')
+const toast = useToast()
+const etat = ref('Frais')
 const etats = ref([
   'À consommer rapidement',
   'Congelé',
@@ -37,6 +38,14 @@ const categories = [
   'Autres',
 ]
 
+function resetValues() {
+  nom.value = ''
+  date_peremption.value = ''
+  quantite.value = 1
+  etat.value = 'Frais'
+  categorie.value = ''
+}
+
 async function ajouter() {
   try {
     await addAliment({
@@ -46,15 +55,11 @@ async function ajouter() {
       etat: etat.value,
       categorie: categorie.value,
     })
-    alert('Aliment ajouté !')
-    nom.value = ''
-    date_peremption.value = ''
-    quantite.value = 1
-    etat.value = ''
-    categorie.value = ''
+    toast.success('Aliment ajouté avec succès !')
+    resetValues()
   } catch (error) {
     console.error(error)
-    alert("Erreur lors de l'ajout.")
+    toast.error("Erreur lors de l'ajout.")
   }
 }
 </script>

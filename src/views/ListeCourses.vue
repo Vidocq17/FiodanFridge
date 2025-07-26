@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getCourses, deleteCourse, updateCourse } from '../services/api'
+import { useToast } from 'vue-toastification'
 import ModalCourses from '../components/modal/ModalCourses.vue'
 
 const courses = ref([])
 const selectedCategory = ref('')
+
+const toast = useToast()
 
 const showModal = ref(false)
 const courseEdition = ref(null)
@@ -33,6 +36,7 @@ onMounted(fetchCourses)
 
 async function supprimer(id) {
   await deleteCourse(id)
+  toast.success('Course supprimée avec succès !')
   fetchCourses()
 }
 
@@ -43,6 +47,7 @@ function ouvrirModal(course) {
 
 function toggleFait(course) {
   course.fait = !course.fait
+  toast.success(`Course marquée comme ${course.fait ? 'faite' : 'non faite'} !`)
   updateCourse(course.id, { ...course, fait: course.fait })
     .then(fetchCourses)
     .catch((error) => console.error('Error updating course:', error))
@@ -56,6 +61,7 @@ async function enregistrerModifications() {
     fait: courseEdition.value.fait || false,
   })
   showModal.value = false
+  toast.success('Modifications enregistrées avec succès !')
   fetchCourses()
 }
 
