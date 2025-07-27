@@ -2,7 +2,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { getCourses, deleteCourse, updateCourse } from '../services/api'
 import { useToast } from 'vue-toastification'
+
 import ModalCourses from '../components/modal/ModalCourses.vue'
+import ModalFrigoCourse from '../components/modal/ModalFrigoCourse.vue'
 
 const courses = ref([])
 const selectedCategory = ref('')
@@ -13,6 +15,8 @@ const searchterm = ref('')
 
 const showModal = ref(false)
 const courseEdition = ref(null)
+const showAjoutFrigo = ref(false)
+const courseSelectionnee = ref(null)
 
 const categories = [
   'Boissons',
@@ -79,6 +83,11 @@ const filteredCourses = computed(() => {
   result.sort((a, b) => Number(a.fait) - Number(b.fait))
   return result
 })
+
+function passerAuFrigo(course) {
+  courseSelectionnee.value = course
+  showAjoutFrigo.value = true
+}
 </script>
 
 <template>
@@ -151,6 +160,12 @@ const filteredCourses = computed(() => {
           >
             🗑 Supprimer
           </button>
+          <button
+            @click="passerAuFrigo(course)"
+            class="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2 rounded"
+          >
+            ❄️ Passer au frigo
+          </button>
         </div>
 
         <ModalCourses
@@ -160,6 +175,13 @@ const filteredCourses = computed(() => {
           :categories="categories"
           @close="showModal = false"
           @save="enregistrerModifications"
+        />
+
+        <ModalFrigoCourse
+          :show="showAjoutFrigo"
+          :course="courseSelectionnee"
+          @close="showAjoutFrigo = false"
+          @saved="fetchCourses"
         />
       </div>
     </div>
