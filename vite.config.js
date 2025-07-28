@@ -16,7 +16,7 @@ export default defineConfig({
         runtimeCaching: [/*...*/],
       },
       manifest: {
-        name: 'Sim&Gege Frigo',
+        name: 'Frigo & Aliments',
         short_name: 'F&A',
         start_url: '/',
         display: 'standalone',
