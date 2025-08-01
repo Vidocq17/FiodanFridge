@@ -1,10 +1,14 @@
+<script setup>
+import Logo from '../../public/icon-512.png'
+</script>
+
 <template>
   <nav
     class="bg-gray-100 shadow-md w-full md:w-60 md:h-screen p-4 flex flex-col items-center md:items-start gap-6"
   >
     <!-- Logo -->
     <div class="flex items-center justify-center w-full mb-4">
-      <img src="../assets/logo.svg" alt="Logo" class="w-12 h-12" />
+      <img :src=Logo alt="Logo" class="w-12 h-12" />
     </div>
 
     <!-- Liens de navigation -->
