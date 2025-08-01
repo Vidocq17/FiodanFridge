@@ -5,6 +5,7 @@ import { getAliments, updateAliment, deleteAliment, passerAuCongelateur } from '
 import { useToast } from 'vue-toastification'
 
 import ModalFrigo from '../components/modal/ModalFrigo.vue'
+import ModalFrigoToCourse from '../components/modal/ModalFrigoToCourse.vue'
 
 // FAIT - TODO : notifications
 // FAIT - TODO: ajouter liste de recherche dans les listes
@@ -21,6 +22,8 @@ const alimentEdition = ref(null)
 const todayDate = new Date().toISOString().split('T')[0]
 const toast = useToast()
 const searchTerm = ref('')
+const showCourseModal = ref(false)
+const alimentASupprimer = ref(null)
 
 const categories = [
   'Boissons',
@@ -67,9 +70,15 @@ const alimentsFiltres = computed(() => {
   })
 })
 
-async function supprimer(id) {
-  await deleteAliment(id)
-  toast.success('Aliment supprimé avec succès !')
+function demanderAjoutCourse(aliment) {
+  alimentASupprimer.value = aliment
+  showCourseModal.value = true
+}
+
+async function confirmerSuppressionEtAjout() {
+  await deleteAliment(alimentASupprimer.value.id)
+  toast.success('Aliment supprimé du frigo')
+  showCourseModal.value = false
   fetchAliments()
 }
 
@@ -242,7 +251,7 @@ function exporterVersCalendrier() {
             ✏️ Modifier
           </button>
           <button
-            @click="supprimer(aliment.id)"
+            @click="demanderAjoutCourse(aliment)"
             class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 rounded"
           >
             🗑 Supprimer
@@ -255,7 +264,7 @@ function exporterVersCalendrier() {
           </button>
         </div>
 
-        <!-- Modale -->
+        <!-- Modale d'édition -->
         <ModalFrigo
           v-if="showModal && alimentEdition?.id === aliment.id"
           :show="showModal"
@@ -267,5 +276,14 @@ function exporterVersCalendrier() {
         />
       </div>
     </div>
+
+    <!-- Modale ajout dans les courses après suppression -->
+    <ModalFrigoToCourse
+      v-if="showCourseModal"
+      :frigo="alimentASupprimer"
+      :show="showCourseModal"
+      @close="showCourseModal = false"
+      @saved="confirmerSuppressionEtAjout"
+    />
   </div>
 </template>

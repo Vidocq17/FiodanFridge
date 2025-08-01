@@ -4,7 +4,7 @@ import { getCourses, deleteCourse, updateCourse } from '../services/api'
 import { useToast } from 'vue-toastification'
 
 import ModalCourses from '../components/modal/ModalCourses.vue'
-import ModalFrigoCourse from '../components/modal/ModalFrigoCourse.vue'
+import ModalFrigoCourse from '../components/modal/ModalCourseToFrigo.vue'
 
 const courses = ref([])
 const selectedCategory = ref('')
